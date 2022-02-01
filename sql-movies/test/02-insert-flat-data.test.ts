@@ -30,25 +30,42 @@ const insertActors = (actors: string[]) => {
 };
 
 const insertKeywords = (keywords: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into KEYWORDS (keyword) values` + 
+    keywords.map(keyword => `('${escape(keyword)}')`).join(",")
+  );
 };
 
 const insertDirectors = (directors: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into DIRECTORS (full_name) values` +
+    directors.map(director => `('${escape(director)}')`).join(",")
+  );
 };
 
 const insertGenres = (genres: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into GENRES (genre) values` +
+    genres.map(genre => `('${escape(genre)}')`).join(",")
+  );
 };
 
 const insertProductionCompanies = (companies: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into production_companies (company_name) values` +
+    companies.map(company => `('${escape(company)}')`).join(",")
+  );
 };
 
 const insertMovies = (movies: Movie[]) => {
-  throw new Error(`todo`);
+  return(
+    `insert into movies (imdb_id,popularity,budget, budget_adjusted, revenue, revenue_adjusted,
+      original_title, homepage, tagline, overview, runtime, release_date) values` + 
+    movies.map(movie => `('${escape(movie.imdbId)}', '${movie.popularity}', '${movie.budget}', '${movie.budgetAdjusted}', '${movie.revenue}', '${movie.revenueAdjusted}',
+     '${escape(movie.originalTitle)}', '${escape(movie.homepage)}', '${escape(movie.tagline?movie.tagline:' ')}', '${escape(movie.overview)}', '${movie.runtime}', '${escape(movie.releaseDate)}')`).join(",")
+  );
 };
-
+  
 describe("Insert Flat Data", () => {
   let db: Database;
 
@@ -69,7 +86,7 @@ describe("Insert Flat Data", () => {
 
       const count = await db.selectSingleRow(selectCount(ACTORS));
       expect(count.c).toBe(7617);
-
+      
       const actor = await db.selectSingleRow(selectActorByName("Tom Hardy"));
       expect(actor.id).not.toBeNaN();
       expect(actor.full_name).toEqual("Tom Hardy");
